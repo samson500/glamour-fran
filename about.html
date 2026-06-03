@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from glamourcreativity.site/about.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 02 Jun 2026 21:20:46 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>About Glamour | The Soft Life</title>
+    <script src="https://cdn.tailwindcss.com/"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap');
+        
+        :root {
+            --glam-gold: #d4af37;
+            --glam-black: #050505;
+        }
+
+        body { 
+            background-color: var(--glam-black); 
+            color: #ffffff; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            margin: 0; padding: 0;
+            line-height: 1.6;
+        }
+
+        .gold-text {
+            color: var(--glam-gold);
+            background: linear-gradient(135deg, #f5e050 0%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 20px;
+        }
+
+        .content-section {
+            padding: 40px 24px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--glam-gold);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .text-description {
+            color: #a1a1aa;
+            font-size: 17px;
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--glam-gold);
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 40px;
+            transition: opacity 0.3s;
+        }
+
+        .back-link:hover { opacity: 0.8; }
+
+        #loader {
+            position: fixed; inset: 0; background: var(--glam-black);
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .spinner {
+            width: 30px; height: 30px; border: 2px solid rgba(212, 175, 55, 0.1);
+            border-top-color: var(--glam-gold); border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .feature-card {
+            background: #0a0a0a;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Minimal Header -->
+    <nav class="nav-container">
+        <div class="max-w-lg mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <img src="logo.png" alt="Logo" class="w-8 h-8 object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/6941/6941697.png'">
+                <span class="text-xl font-black uppercase tracking-tighter">Glamour</span>
+            </div>
+            <a href="index-2.html" class="text-white/50 text-sm font-bold uppercase tracking-widest">Close</a>
+        </div>
+    </nav>
+
+    <main class="content-section">
+        <div class="feature-tag">Established 2026</div>
+        <h1 class="text-4xl font-extrabold gold-text mb-8 tracking-tight">About Glamour</h1>
+
+        <div class="space-y-6">
+            <p class="text-description">
+                Glamour is a premium European institution that partners with Africans to showcase your lifestyle, creativity, and daily habits. It's where your everyday life becomes a stream of income—from your routines to your cuisine.
+            </p>
+
+            <p class="text-description">
+                Our mission is to provide an accessible, luxury-driven environment where users can master digital skills, participate in premium online activities, and connect with a supportive global community.
+            </p>
+
+            <div class="feature-card">
+                <h3 class="text-white font-bold mb-3 flex items-center gap-2">
+                    <i class="fas fa-check-circle gold-text"></i> Digital Participation
+                </h3>
+                <p class="text-sm text-gray-500">
+                    Glamour focuses on education, digital participation, and the responsible use of technology while helping users discover new opportunities online.
+                </p>
+            </div>
+
+            <p class="text-description">
+                Thousands of users from different countries join Glamour to explore digital tools, collaborate with others, and learn how modern online platforms operate.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 mt-8">
+                <div class="feature-card py-6 text-center">
+                    <div class="text-2xl font-black gold-text mb-1">12K+</div>
+                    <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Active Users</div>
+                </div>
+                <div class="feature-card py-6 text-center">
+                    <div class="text-2xl font-black gold-text mb-1">€50M+</div>
+                    <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Earned Yearly</div>
+                </div>
+            </div>
+
+            <a href="index-2.html" class="back-link">
+                <i class="fas fa-arrow-left text-xs"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+
+        <!-- Minimal Footer info -->
+        <div class="mt-20 pt-10 border-t border-white/5 pb-10">
+            <p class="text-[9px] text-gray-800 font-bold uppercase tracking-[0.4em]">European Lifestyle Hub • Glamour Platform</p>
+        </div>
+    </main>
+
+    <script>
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        });
+    </script>
+</body>
+
+<!-- Mirrored from glamourcreativity.site/about.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 02 Jun 2026 21:20:46 GMT -->
+</html>

@@ -1,0 +1,563 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from glamourcreativity.site/dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 02 Jun 2026 21:20:49 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head><script type="text/javascript" src="___vscode_livepreview_injected_script.html"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Glamour Elite - Luxury Dashboard</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <script src="https://cdn.tailwindcss.com/"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&amp;display=swap');
+        
+        :root {
+            --glam-gold: #d4af37;
+            --glam-black: #050505;
+            --glam-card: #0f0f0f;
+        }
+
+        body { 
+            background-color: var(--glam-black); 
+            color: #ffffff; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            padding-bottom: 120px;
+            overflow-x: hidden;
+        }
+
+        .gold-text {
+            background: linear-gradient(135deg, #f5e050 0%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .balance-card {
+            background: linear-gradient(145deg, #1a1a1a, #050505);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+
+        .feature-card {
+            background: var(--glam-card);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:active {
+            transform: scale(0.96);
+            background: #151515;
+        }
+
+        .icon-box {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(212, 175, 55, 0.1);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--glam-gold); font-size: 1.1rem;
+        }
+
+        .live-ticker {
+            background: var(--glam-gold);
+            color: #000;
+            white-space: nowrap; overflow: hidden;
+            font-weight: 900; font-size: 10px; padding: 8px 0;
+            text-transform: uppercase; letter-spacing: 1.5px;
+        }
+
+        .ticker-move {
+            display: inline-block;
+            animation: scroll 40s linear infinite;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .nav-blur {
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(25px);
+            border-top: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .popup-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.97);
+            backdrop-filter: blur(15px);
+            z-index: 2000; display: none;
+            align-items: center; justify-content: center; padding: 20px;
+        }
+
+        .activate-gradient {
+            background: linear-gradient(135deg, #f5e050 0%, #d4af37 100%);
+            color: #000; font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Profile Header -->
+    <div class="px-6 pt-10 pb-4 flex justify-between items-end">
+        <div>
+            <p class="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.3em] mb-1">WELCOME,</p>
+            <h1 class="text-2xl font-black italic gold-text" id="userDisplay">@GlamUser</h1>
+        </div>
+        <div class="bg-zinc-900/50 border border-zinc-800 px-4 py-2 rounded-full flex items-center gap-2">
+            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span class="text-[10px] font-black text-zinc-300 uppercase tracking-tighter" id="countryDisplay">Detecting...</span>
+        </div>
+    </div>
+
+    <!-- Portfolio Card -->
+    <div class="px-6 mb-8">
+        <div class="balance-card p-8">
+            <div class="flex justify-between items-start mb-1">
+                <span class="text-[10px] font-black uppercase tracking-widest text-zinc-500">BALANCE</span>
+                <i class="fas fa-gem gold-text text-xl"></i>
+            </div>
+            <div class="text-5xl font-extrabold tracking-tighter italic" id="mainBalance">...</div>
+            
+            <div class="mt-10 grid grid-cols-2 gap-4">
+                <button onclick="openActivation()" class="activate-gradient py-4 rounded-3xl text-[9.5px] uppercase tracking-widest shadow-xl active:scale-95 transition-transform">
+                    Activate Account
+                </button>
+                <button onclick="handleAction('Withdrawals')" class="bg-white/5 border border-white/10 py-4 rounded-3xl text-[10px] uppercase tracking-widest font-bold active:scale-95 transition-transform">
+                    Withdraw
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticker -->
+    <div class="live-ticker mb-8">
+        <div class="ticker-move" id="dynamicTicker">
+            WELCOME TO YOUR GLAMOUR ELITE DASHBOARD • SYSTEM ONLINE • WITHDRAWALS OPEN WEDNESDAYS & SUNDAYS • ACTIVATION IS INSTANT • GLOBAL REGIONAL REWARDS ACTIVE
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 gap-4 px-6 mb-10">
+        <div class="bg-zinc-900/40 border border-zinc-800/60 p-5 rounded-3xl">
+            <p class="text-[9px] font-bold text-zinc-600 uppercase mb-2">Team Revenue</p>
+            <p class="text-xl font-bold gold-text" id="indirectIncome">0</p>
+        </div>
+        <div class="bg-zinc-900/40 border border-zinc-800/60 p-5 rounded-3xl text-right">
+            <p class="text-[9px] font-bold text-zinc-600 uppercase mb-2">Prestige Level</p>
+            <p class="text-xl font-bold text-white italic">LEVEL 1</p>
+        </div>
+    </div>
+
+    <!-- 5 Glam Streams -->
+    <div class="px-6 mb-10">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-[11px] font-black uppercase tracking-widest text-zinc-500">Glam Streams</h3>
+            <span class="bg-zinc-800 text-zinc-400 text-[8px] px-2 py-1 rounded font-bold uppercase">5 InActive</span>
+        </div>
+        
+        <div class="space-y-3">
+            <div onclick="handleAction('Lifestyle')" class="feature-card p-5 flex items-center gap-4">
+                <div class="icon-box"><i class="fas fa-star"></i></div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold">Lifestyle Monetization</h4>
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase">Post & Earn Daily</p>
+                </div>
+                <i class="fas fa-lock text-zinc-800 text-xs"></i>
+            </div>
+
+            <div onclick="handleAction('Face-Time')" class="feature-card p-5 flex items-center gap-4">
+                <div class="icon-box"><i class="fas fa-video"></i></div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold">Elite Face-Time</h4>
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase">Video Engagement Hub</p>
+                </div>
+                <i class="fas fa-lock text-zinc-800 text-xs"></i>
+            </div>
+
+            <div onclick="handleAction('Dark Mode')" class="feature-card p-5 flex items-center gap-4">
+                <div class="icon-box"><i class="fas fa-moon"></i></div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold">Dark Mode Cycles</h4>
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase">Overnight Traffic Mine</p>
+                </div>
+                <i class="fas fa-lock text-zinc-800 text-xs"></i>
+            </div>
+
+            <div onclick="handleAction('Scripting')" class="feature-card p-5 flex items-center gap-4">
+                <div class="icon-box"><i class="fas fa-pen-nib"></i></div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold">Script-2-Cash</h4>
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase">Content Transcription</p>
+                </div>
+                <i class="fas fa-lock text-zinc-800 text-xs"></i>
+            </div>
+
+            <div onclick="handleAction('Lingua')" class="feature-card p-5 flex items-center gap-4">
+                <div class="icon-box"><i class="fas fa-globe"></i></div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold">Glam Lingua</h4>
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase">Foreign Tasks Reward</p>
+                </div>
+                <i class="fas fa-lock text-zinc-800 text-xs"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Referral Link Section -->
+    <div class="px-6 mb-10">
+        <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-[32px]">
+            <p class="text-[10px] font-black uppercase text-zinc-600 mb-4 tracking-widest">Your Private Network Link</p>
+            <div class="flex gap-2">
+                <input type="text" id="refLink" readonly class="bg-black border border-zinc-800 rounded-2xl p-4 text-[10px] text-zinc-500 flex-1 outline-none font-medium">
+                <button onclick="copyRef()" class="bg-zinc-800 px-6 rounded-2xl gold-text active:scale-90 transition-transform">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="px-6 mb-10 grid grid-cols-2 gap-4">
+        <button onclick="contactSupport()" class="w-full bg-zinc-900 py-5 rounded-[24px] text-[10px] font-black uppercase tracking-[0.2em] border border-zinc-800 text-zinc-400 active:scale-95 transition-transform">
+            Support
+        </button>
+        <button onclick="logout()" class="w-full bg-zinc-950/50 py-5 rounded-[24px] text-[10px] font-black uppercase tracking-[0.2em] border border-zinc-900 text-red-900 active:scale-95 transition-transform">
+            LOG OUT
+        </button>
+    </div>
+
+    <!-- Fixed Bottom Nav -->
+    <div class="nav-blur fixed bottom-0 left-0 w-full flex justify-around items-center py-6 px-4 z-50">
+        <div class="flex flex-col items-center gap-1.5 gold-text">
+            <i class="fas fa-house-chimney text-xl"></i>
+            <span class="text-[8px] font-black uppercase tracking-widest">Home</span>
+        </div>
+        <div onclick="handleAction('Glam Works')" class="flex flex-col items-center gap-1.5 text-zinc-700 active:text-zinc-400 transition-colors">
+            <i class="fas fa-briefcase text-xl"></i>
+            <span class="text-[8px] font-black uppercase tracking-widest">Glam Works</span>
+        </div>
+        <div onclick="handleAction('Profile Settings')" class="flex flex-col items-center gap-1.5 text-zinc-700 active:text-zinc-400 transition-colors">
+            <i class="fas fa-user-circle text-xl"></i>
+            <span class="text-[8px] font-black uppercase tracking-widest">Profile</span>
+        </div>
+    </div>
+
+    <div id="activationPopup" class="popup-overlay">
+    <div class="bg-zinc-950 border border-zinc-900 rounded-[45px] w-full max-w-sm p-8 text-center relative overflow-hidden">
+        <div class="w-12 h-1.5 bg-zinc-800 rounded-full mx-auto mb-12"></div>
+        
+        <div id="paymentInitial">
+            <h2 class="gold-text text-xl font-black italic mb-2 uppercase tracking-tighter">One Time Activation</h2>
+            <p id="feeLabel" class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-10">Activation Fee: ₦14,000</p>
+            
+            <div class="bg-black border border-zinc-900 rounded-[35px] p-10 mb-10 text-center">
+    <p class="text-[9px] text-zinc-500 uppercase font-black mb-8 leading-relaxed tracking-widest">
+        Instant activation via our verified payment gateway
+    </p>
+    <div class="bg-red-900/10 border border-red-900/20 p-3 rounded-2xl mb-6">
+                    <p class="text-[7px] text-red-700 font-bold uppercase tracking-widest">Secure Payment Protection Active</p>
+                </div>
+    <button onclick="goToPaystack()" class="activate-gradient block w-full py-5 rounded-[22px] text-[11px] font-black uppercase tracking-widest shadow-2xl active:scale-95 transition-all">
+    Pay Now & Activate
+</button>
+</div>
+
+<button onclick="closeActivation()" class="text-[10px] font-black text-zinc-700 uppercase tracking-[0.3em] mt-4 block w-full">
+    Go Back
+</button>
+        </div>
+    </div>
+</div>
+
+<div id="paymentVerifying" class="hidden">
+            <h2 class="gold-text text-xl font-black italic mb-2 uppercase tracking-tighter">Payment Completed?</h2>
+            <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-10">Waiting for confirmation</p>
+            
+            <div class="bg-black border border-zinc-900 rounded-[35px] p-8 mb-8 text-center">
+                <p class="text-[9px] text-zinc-500 uppercase font-black mb-8 leading-relaxed tracking-widest">Did you finish the transaction on Kora?</p>
+                <button onclick="showSocials()" class="activate-gradient w-full py-5 rounded-[22px] text-[11px] font-black uppercase shadow-2xl active:scale-95">
+                    Confirm Payment Now
+                </button>
+            </div>
+            <button onclick="resetModal()" class="text-[10px] font-black text-zinc-800 uppercase tracking-widest mt-4 block w-full">Try Payment Again</button>
+        </div>
+
+        <div id="paymentSocials" class="hidden">
+            <h3 class="text-white font-black italic uppercase text-lg mb-2">Final Verification</h3>
+            <p class="text-zinc-500 text-[9px] uppercase font-bold mb-10">Select a platform to send your receipt</p>
+            
+            <div class="space-y-4 mb-6">
+                <button onclick="sendProof('Telegram')" class="w-full bg-[#229ED9] py-5 rounded-2xl flex items-center justify-center gap-3 active:scale-95 shadow-lg">
+                    <i class="fab fa-telegram text-white text-xl"></i>
+                    <span class="text-[10px] font-black uppercase text-white tracking-widest">Confirm on Telegram</span>
+                </button>
+
+                <button onclick="sendProof('WhatsApp')" class="w-full bg-[#25D366] py-5 rounded-2xl flex items-center justify-center gap-3 active:scale-95 shadow-lg">
+                    <i class="fab fa-whatsapp text-white text-xl"></i>
+                    <span class="text-[10px] font-black uppercase text-white tracking-widest">Confirm on WhatsApp</span>
+                </button>
+            </div>
+            <button onclick="closeActivation()" class="text-[10px] font-black text-zinc-800 uppercase tracking-widest block w-full">Cancel</button>
+        </div>
+    </div>
+</div>
+            <!-- Verification Sub-Menu -->
+            <div id="paymentVerifying" class="hidden py-4">
+                <div class="mb-6 flex justify-center">
+                    <div class="w-12 h-12 border-4 border-zinc-800 border-t-yellow-500 rounded-full animate-spin"></div>
+                </div>
+                <h3 class="text-white font-black italic uppercase text-lg mb-2">Verifying Payment...</h3>
+                <p class="text-zinc-500 text-[9px] uppercase font-bold mb-10">Select an agent below to upload your proof</p>
+                
+                <div class="space-y-4">
+                    <button onclick="sendProof('Telegram')" class="w-full bg-[#229ED9]/10 border border-[#229ED9]/30 py-5 rounded-2xl flex items-center justify-center gap-3 active:scale-95 transition-transform">
+                        <i class="fab fa-telegram text-[#229ED9] text-xl"></i>
+                        <span class="text-[10px] font-black uppercase text-white tracking-widest">Upload to Telegram</span>
+                    </button>
+
+                    <button onclick="sendProof('WhatsApp')" class="w-full bg-[#25D366]/10 border border-[#25D366]/30 py-5 rounded-2xl flex items-center justify-center gap-3 active:scale-95 transition-transform">
+                        <i class="fab fa-whatsapp text-[#25D366] text-xl"></i>
+                        <span class="text-[10px] font-black uppercase text-white tracking-widest">Upload to WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+    </div>
+
+    <!-- Activity Reward Popup -->
+    <div id="activityPopup" class="popup-overlay">
+        <div class="bg-zinc-950 border border-zinc-900 rounded-[45px] w-full max-w-sm p-10 text-center shadow-2xl scale-90 transition-all duration-300" id="activityCard">
+            <div class="w-16 h-16 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-gift gold-text text-3xl"></i>
+            </div>
+            <h2 class="gold-text text-2xl font-black italic mb-2 uppercase">Daily Activity</h2>
+            <p id="activityValue" class="text-white text-3xl font-black mb-4 tracking-tighter">...</p>
+            <p class="text-zinc-600 text-[10px] font-black uppercase tracking-[0.2em] mb-10 leading-relaxed">
+                Your first-time login reward bonus has been credited to your portfolio.
+            </p>
+            <button onclick="closeActivityPopup()" class="activate-gradient w-full py-5 rounded-[22px] text-[11px] uppercase tracking-widest shadow-2xl active:scale-95">
+                Collect Reward
+            </button>
+        </div>
+    </div>
+
+    <!-- Kora Checkout SDK -->
+    <script src="https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js"></script>
+    <script>
+        function launchKoraPayment(opts) { window.Korapay.initialize(opts); }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+  apiKey: "AIzaSyAjsAimtV6oQCD8oCFrb72cyRBMXukB0yI",
+  authDomain: "glamour-d3c61.firebaseapp.com",
+  projectId: "glamour-d3c61",
+  storageBucket: "glamour-d3c61.firebasestorage.app",
+  messagingSenderId: "826174500352",
+  appId: "1:826174500352:web:e2d35e3678eba9b182f2e5",
+  measurementId: "G-H7MWQ3F2Q5"
+};
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const currentUsername = localStorage.getItem('glamour_username') || "EliteGuest";
+        let globalAdminSettings = {
+            bankName: "PALMPAY",
+            accountNumber: "9013801817",
+            accountName: "Yetunde kolawole Esther",
+            redirectLink: "",
+            systemStatus: "active"
+        };
+
+        document.getElementById('userDisplay').innerText = currentUsername;
+        document.getElementById('refLink').value = window.location.origin + "/auth/signup?ref=" + currentUsername;
+
+        const appId = "default-app-id";
+        const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'global');
+        
+        onSnapshot(settingsDocRef, (snapshot) => {
+            if (snapshot.exists()) {
+                globalAdminSettings = snapshot.data();
+            }
+        });
+
+        const userDocRef = doc(db, 'users', currentUsername);
+        onSnapshot(userDocRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.data();
+                syncCurrencyAndBalance(data.country || "Nigeria", data);
+                checkDailyActivity(data);
+            }
+        });
+
+        function syncCurrencyAndBalance(country, userData) {
+    let symbol = (country === "Ghana") ? "GHS " : (country === "Cameroon" ? "XAF " : "₦");
+    let fee = (country === "Ghana") ? "220 GHS" : (country === "Cameroon" ? "13,000 XAF" : "₦14,000");
+
+    // Updates the numbers on the dashboard
+    document.getElementById('mainBalance').innerText = symbol + (userData.balance || 0).toLocaleString();
+    document.getElementById('indirectIncome').innerText = symbol + (userData.indirectEarnings || 0).toLocaleString();
+    document.getElementById('countryDisplay').innerText = country.toUpperCase() + " REGION";
+    
+    // Updates the fee text in the popup
+    const feeEl = document.getElementById('feeLabel');
+    if(feeEl) feeEl.innerText = "Activation Fee: " + fee;
+}
+
+        async function checkDailyActivity(userData) {
+            const lastActivity = userData.lastActivityDate;
+            const today = new Date().toISOString().split('T')[0];
+
+            if (lastActivity !== today) {
+                let reward = 5000;
+                let symbol = "₦";
+                
+                if(userData.country === "Ghana") { symbol = "GHS "; reward = 75; }
+                else if(userData.country === "Cameroon") { symbol = "XAF "; reward = 2500; }
+                else if(userData.country === "USA") { symbol = "$"; reward = 2.5; }
+
+                document.getElementById('activityValue').innerText = "+" + symbol + reward.toLocaleString();
+                document.getElementById('activityPopup').style.display = 'flex';
+                
+                // Update Firebase immediately
+                await updateDoc(userDocRef, {
+                    balance: increment(reward),
+                    lastActivityDate: today
+                });
+            }
+        }
+
+
+        window.openActivation = () => {
+    resetModal(); // Ensure it starts at Step 1
+    document.getElementById('activationPopup').style.display = 'flex';
+};
+
+window.closeActivityPopup = () => {
+    document.getElementById('activityPopup').style.display = 'none';
+};
+
+// Start the flow: Launch Kora inline checkout
+window.goToPaystack = () => {
+    const fullName = localStorage.getItem('glamour_fullname') || "Guest";
+    const email    = localStorage.getItem('glamour_email')    || "guest@example.com";
+    const country  = localStorage.getItem('glamour_country')  || "Nigeria";
+
+    let amount   = 14000;
+    let currency = "NGN";
+    if (country === "Ghana")    { amount = 220;    currency = "GHS"; }
+    if (country === "Cameroon") { amount = 13000;  currency = "XAF"; }
+
+    const reference = `GLAM-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+
+    launchKoraPayment({
+        key:       "pk_live_4HzxreLoRJMQKQWbbJEqDBMJUFtqM3tdiJ64aU6q",
+        reference,
+        amount,
+        currency,
+        customer:  { name: fullName, email },
+        narration: "Glamour Elite – Account Activation",
+
+        onSuccess: async () => {
+            window.location.href = "https://shorturl.at/pCtxq";
+        },
+
+        onClose: () => { /* user closed without paying — stay on initial step */ },
+
+        onFailed: () => {
+            const existing = document.getElementById("payErrMsg");
+            if (existing) existing.remove();
+            const err = document.createElement("p");
+            err.id = "payErrMsg";
+            err.style.cssText = "color:#ff6b6b;font-size:.75rem;margin-top:.8rem;text-align:center;font-weight:800;text-transform:uppercase;letter-spacing:.05em";
+            err.textContent = "Payment failed. Please try again.";
+            document.getElementById('paymentInitial').appendChild(err);
+            setTimeout(() => err.remove(), 4000);
+        }
+    });
+};
+
+window.closeActivation = () => {
+    document.getElementById('activationPopup').style.display = 'none';
+};
+
+// Show the Telegram/WhatsApp buttons
+window.showSocials = () => {
+    document.getElementById('paymentVerifying').classList.add('hidden');
+    document.getElementById('paymentSocials').classList.remove('hidden');
+};
+
+// Reset back to the first step
+window.resetModal = () => {
+    document.getElementById('paymentInitial').classList.remove('hidden');
+    document.getElementById('paymentVerifying').classList.add('hidden');
+    document.getElementById('paymentSocials').classList.add('hidden');
+};
+
+// Handle Social Redirects
+window.sendProof = (platform) => {
+    const MSG = encodeURIComponent("Hello, Glamour Admin. Here is my payment receipt please verify and Activate my account.");
+    const TG_LINK = "https://t.me/coachfavour01"; 
+    const WA_LINK = "https://wa.me/2348129013848"; 
+    
+    if(platform === 'Telegram') window.open(`${TG_LINK}?text=${MSG}`);
+    else window.open(`${WA_LINK}?text=${MSG}`);
+};
+
+        window.contactSupport = () => window.open("https://t.me/coachfavour01");
+        window.logout = () => { localStorage.clear(); window.location.href = 'login.html'; };
+
+        window.handleAction = (name) => {
+            const overlay = document.createElement('div');
+            overlay.className = 'popup-overlay';
+            overlay.style.display = 'flex';
+            overlay.innerHTML = `
+                <div class="bg-zinc-950 border border-zinc-900 p-10 rounded-[45px] w-full max-w-xs text-center shadow-2xl">
+                    <i class="fas fa-shield-halved gold-text text-3xl mb-6"></i>
+                    <h3 class="gold-text font-black italic mb-3 uppercase">Access Reserved</h3>
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase mb-10 px-2 leading-relaxed">
+                        This ${name} asset is locked for non-activated members. Verify your elite status to proceed.
+                    </p>
+                    <button onclick="this.parentElement.parentElement.remove(); openActivation();" class="activate-gradient w-full py-4 rounded-2xl text-[10px] uppercase shadow-lg mb-4">
+                        Verify Elite Status
+                    </button>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-[9px] font-black text-zinc-800 uppercase py-2">Dismiss</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        };
+
+        window.copyRef = () => {
+            const refInput = document.getElementById("refLink");
+            copyToClipboard(refInput.value, "ACCESS LINK COPIED");
+        };
+
+        window.copyToClipboard = (text, message = "COPIED TO CLIPBOARD") => {
+            const tempInput = document.createElement("input");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-28 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-6 py-2.5 rounded-2xl text-[9px] font-black z-[3000] shadow-2xl border border-white/20";
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        };
+    </script>
+</body>
+
+<!-- Mirrored from glamourcreativity.site/dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 02 Jun 2026 21:20:50 GMT -->
+</html>

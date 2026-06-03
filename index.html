@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from glamourcreativity.site/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 02 Jun 2026 21:20:35 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Glamour | Luxury Lifestyle</title>
+    <script src="https://cdn.tailwindcss.com/"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap');
+        
+        :root {
+            --glam-gold: #d4af37;
+            --glam-bright-gold: #f5e050;
+            --glam-black: #050505;
+        }
+
+        body { 
+            background-color: var(--glam-black); 
+            color: #ffffff; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            margin: 0; padding: 0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .gold-text {
+            background: linear-gradient(135deg, #f5e050 0%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #f5e050 0%, #d4af37 100%);
+            color: #000;
+            font-weight: 800;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 16px 20px;
+            transition: background 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        #menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 5, 5, 0.98);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .menu-link {
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #e5e7eb;
+        }
+
+        .glam-card {
+            background: rgba(15, 17, 21, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .glam-card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            color: var(--glam-bright-gold);
+        }
+
+        .step-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-box {
+            background: rgba(212, 175, 55, 0.03);
+            border-left: 3px solid var(--glam-gold);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+            20%, 40%, 60%, 80% { transform: translateX(3px); }
+        }
+
+        .floating-join {
+            position: fixed;
+            bottom: 25px;
+            right: 20px;
+            z-index: 100;
+            padding: 18px 36px;
+            border-radius: 50px;
+            font-weight: 900;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
+            animation: shake 4s infinite;
+        }
+
+        #loader {
+            position: fixed; inset: 0; background: var(--glam-black);
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
+        }
+
+        .spinner {
+            width: 35px; height: 35px; border: 3px solid rgba(212, 175, 55, 0.1);
+            border-top-color: var(--glam-gold); border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menu-overlay">
+        <div class="flex justify-between items-center mb-10">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="Logo" class="w-14 h-14 object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/6941/6941697.png'">
+                <span class="gold-text font-black text-2xl uppercase tracking-tighter">Glamour</span>
+            </div>
+            <button onclick="toggleMenu()" class="text-3xl text-white">&times;</button>
+        </div>
+
+        <nav class="flex flex-col">
+            <a href="index-2.html" class="menu-link">Home <i class="fas fa-chevron-right text-[10px] opacity-20"></i></a>
+            <a href="#" onclick="toggleMenu(); window.scrollTo(0,0)" class="menu-link">Glam Works <i class="fas fa-chevron-right text-[10px] opacity-20"></i></a>
+            <a href="#" onclick="toggleMenu(); window.scrollTo(0,0)" class="menu-link">Glam Lifestyle <i class="fas fa-chevron-right text-[10px] opacity-20"></i></a>
+            <a href="#" onclick="toggleMenu(); window.scrollTo(0,0)" class="menu-link">Glam Script2Cash <i class="fas fa-chevron-right text-[10px] opacity-20"></i></a>
+            <a href="#" onclick="toggleMenu(); window.scrollTo(0,0)" class="menu-link">Glam Realtime <i class="fas fa-chevron-right text-[10px] opacity-20"></i></a>
+            <a href="about.html" class="menu-link">About <i class="fas fa-chevron-right text-[10px] opacity-20"></i></a>
+            <a href="contact.html" class="menu-link">Support <i class="fas fa-chevron-right text-[10px] opacity-20"></i></a>
+        </nav>
+
+        <div class="mt-auto pt-10 space-y-4">
+            <button onclick="window.location.href='reward.html'" class="btn-gold w-full py-4 uppercase text-xs">Create Account</button>
+            <button onclick="window.location.href='login.html'" class="w-full py-4 border border-white/20 rounded-full text-xs font-bold uppercase">Sign In</button>
+        </div>
+    </div>
+
+    <!-- Sticky Nav -->
+    <nav class="sticky-nav">
+        <div class="max-w-lg mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <img src="logo.png" alt="Logo" class="w-12 h-12 object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/6941/6941697.png'">
+                <span class="text-2xl font-black gold-text uppercase tracking-tighter">GLAMOUR</span>
+            </div>
+            <button onclick="toggleMenu()" class="flex flex-col gap-1.5 p-2">
+                <div class="w-7 h-0.5 bg-white"></div>
+                <div class="w-7 h-0.5 bg-white"></div>
+                <div class="w-7 h-0.5 bg-white"></div>
+            </button>
+        </div>
+    </nav>
+
+    <main class="px-6 py-12 text-center max-w-lg mx-auto">
+        <!-- Hero -->
+        <h1 class="text-4xl font-black leading-[1.1] mb-6 tracking-tighter">
+            Grow Online With <span class="gold-text">Glamour</span> Today.
+        </h1>
+        <p class="text-gray-400 text-[15px] leading-relaxed mb-10 px-2 font-medium">
+            Glamour is a digital learning and engagement platform created to support individuals who want to explore the digital world using tools they already have.
+        </p>
+        <button onclick="window.location.href='reward.html'" class="btn-gold w-full max-w-[280px] py-4 text-lg mb-8 shadow-2xl active:scale-95 transition-all">
+            Get Started
+        </button>
+
+        <!-- Live People Counter -->
+        <div>
+            <div class="inline-flex items-center gap-3 px-5 py-3 bg-white/5 border border-white/10 rounded-2xl mb-16">
+                <i class="fas fa-bolt text-xl text-yellow-400"></i>
+                <span class="text-sm font-bold">
+                    <span id="user-count" class="text-white">12,353</span> 
+                    <span class="text-gray-500 ml-1 uppercase tracking-tighter text-[10px]">active members today</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- FEATURE BOXES -->
+        <div class="mt-8 text-left space-y-4">
+            
+            <div class="glam-card">
+                <i class="fas fa-briefcase glam-card-icon"></i>
+                <h3 class="gold-text font-black text-sm uppercase mb-3 tracking-wider">Glam Works: Your Bridge to Global Careers</h3>
+                <p class="text-gray-400 text-xs leading-relaxed">List your skills and get connected with European firms for high-paying remote roles. Work per hour, earn in Euros, and build a career without borders.</p>
+            </div>
+
+            <div class="glam-card">
+                <i class="fas fa-gem glam-card-icon"></i>
+                <h3 class="gold-text font-black text-sm uppercase mb-3 tracking-wider">Glam Lifestyle: Monetize Your Routine</h3>
+                <p class="text-gray-400 text-xs leading-relaxed">Turn your daily outfits, "Get Ready With Me" videos, and creative routines into a paycheck. On Glamour, your lifestyle is premium content that pays in Pounds and Euros.</p>
+            </div>
+
+            <div class="glam-card">
+                <i class="fas fa-file-video glam-card-icon"></i>
+                <h3 class="gold-text font-black text-sm uppercase mb-3 tracking-wider">Glam Script2Cash: Create & Collect</h3>
+                <p class="text-gray-400 text-xs leading-relaxed">Simply pick a daily script from our platform, create a short video, and share it. We pay you for bringing content to life using the social media habits you already have.</p>
+            </div>
+
+            <div class="glam-card">
+                <i class="fas fa-camera-retro glam-card-icon"></i>
+                <h3 class="gold-text font-black text-sm uppercase mb-3 tracking-wider">Glam Realtime: Live in the Moment</h3>
+                <p class="text-gray-400 text-xs leading-relaxed">Share authentic snapshots of your world—your favorite spots, your town, and your current mood. Help our foreign counterparts see life through your lens and get paid for every post.</p>
+            </div>
+
+            <div class="glam-card">
+                <i class="fas fa-users glam-card-icon"></i>
+                <h3 class="gold-text font-black text-sm uppercase mb-3 tracking-wider">Creator Network</h3>
+                <p class="text-gray-400 text-xs leading-relaxed">Collaborate with global creators and learn from others on the platform to boost your reach and audience engagement.</p>
+            </div>
+
+            <div class="glam-card">
+                <i class="fas fa-handshake glam-card-icon"></i>
+                <h3 class="gold-text font-black text-sm uppercase mb-3 tracking-wider">Supportive Community</h3>
+                <p class="text-gray-400 text-xs leading-relaxed">Track your progress, join discussions, and get real-time help when needed from our expert team of moderators.</p>
+            </div>
+
+        </div>
+
+        <!-- Call to Action -->
+        <div class="mt-24 mb-20">
+            <h2 class="text-3xl font-black mb-8">Ready to Get Started?</h2>
+            <div class="flex flex-col gap-4 max-w-[320px] mx-auto">
+                <button onclick="window.location.href='reward.html'" class="btn-gold py-4 uppercase text-sm tracking-widest">Create Account</button>
+                <button onclick="window.location.href='login.html'" class="border border-white/20 py-4 rounded-full font-bold uppercase text-sm tracking-widest">Sign In</button>
+            </div>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="space-y-6 text-left">
+            <div class="step-box">
+                <div class="flex items-center gap-3 mb-2">
+                    <i class="fas fa-user-plus text-[#00d285]"></i>
+                    <h3 class="text-[#00d285] font-black text-lg">Create Account</h3>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed">Sign up and join the Glamour community with just your smartphone and start your journey.</p>
+            </div>
+            <div class="step-box">
+                <div class="flex items-center gap-3 mb-2">
+                    <i class="fas fa-compass text-[#00d285]"></i>
+                    <h3 class="text-[#00d285] font-black text-lg">Start Exploring</h3>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed">Watch content, explore tools and learn digital opportunities from European experts.</p>
+            </div>
+        </div>
+
+        <!-- Testimonials -->
+        <div class="mt-28">
+            <h2 class="text-3xl font-black mb-10 uppercase tracking-tighter">Trusted by Thousands</h2>
+            <div class="space-y-4">
+                <div class="testimonial-box">
+                    <p class="text-gray-300 text-sm italic mb-4">"Glamour helped me understand digital platforms using just my phone. It's been life changing."</p>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-[10px] text-blue-400"></i>
+                        <p class="gold-text font-black text-[10px] uppercase">— Daniel, Lagos</p>
+                    </div>
+                </div>
+                <div class="testimonial-box">
+                    <p class="text-gray-300 text-sm italic mb-4">"The platform explains online opportunities clearly. Highly recommended for beginners."</p>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-[10px] text-blue-400"></i>
+                        <p class="gold-text font-black text-[10px] uppercase">— Grace, Abuja</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full Footer -->
+        <div class="mt-32 text-left border-t border-white/5 pt-16 pb-32">
+            <div class="mb-12">
+                <h3 class="gold-text font-black text-2xl mb-4">GLAMOUR</h3>
+                <p class="text-gray-500 text-sm leading-relaxed max-w-sm">
+                    A digital learning and engagement platform helping individuals explore online opportunities globally.
+                </p>
+            </div>
+            <div class="space-y-12">
+                <div>
+                    <h4 class="gold-text font-black text-sm uppercase tracking-widest mb-6">Platform</h4>
+                    <div class="flex flex-col gap-4">
+                        <a href="#" onclick="window.scrollTo(0,0)" class="text-gray-500 text-sm">Glam Works</a>
+                        <a href="#" onclick="window.scrollTo(0,0)" class="text-gray-500 text-sm">Glam Lifestyle</a>
+                        <a href="#" onclick="window.scrollTo(0,0)" class="text-gray-500 text-sm">Glam Script2Cash</a>
+                        <a href="#" onclick="window.scrollTo(0,0)" class="text-gray-500 text-sm">Glam Realtime</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="gold-text font-black text-sm uppercase tracking-widest mb-6">Support</h4>
+                    <div class="flex flex-col gap-4">
+                        <a href="contact.html" class="text-gray-500 text-sm">Contact Support</a>
+                        <a href="about.html" class="text-gray-500 text-sm">About Glamour</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="gold-text font-black text-sm uppercase tracking-widest mb-6">Legal</h4>
+                    <div class="flex flex-col gap-4">
+                        <a href="privacy.html" class="text-gray-500 text-sm">Privacy Policy</a>
+                        <a href="privacy.html" class="text-gray-500 text-sm">Terms & Conditions</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-20 pt-10 border-t border-white/5 text-center">
+                <p class="text-[10px] text-gray-700 font-bold uppercase tracking-[0.3em]">© 2026 GLAMOUR PREMIUM NETWORK</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Shaking Action Button -->
+    <button onclick="window.location.href='reward.html'" class="btn-gold floating-join uppercase text-xs tracking-tighter">
+        Join Now
+    </button>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu-overlay');
+            const isVisible = menu.style.display === 'flex';
+            menu.style.display = isVisible ? 'none' : 'flex';
+            document.body.style.overflow = isVisible ? 'auto' : 'hidden';
+        }
+
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 600);
+        });
+
+        function initCounter() {
+            const countEl = document.getElementById('user-count');
+            let count = 12353;
+            setInterval(() => {
+                count += Math.floor(Math.random() * 2) + 1;
+                countEl.innerText = count.toLocaleString();
+            }, 5000);
+        }
+        initCounter();
+    </script>
+</body>
+
+<!-- Mirrored from glamourcreativity.site/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 02 Jun 2026 21:20:46 GMT -->
+</html>
