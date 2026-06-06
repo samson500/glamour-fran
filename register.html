@@ -90,6 +90,40 @@
             margin-top: 15px;
             font-weight: bold;
         }
+
+        .package-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .package-option input {
+            display: none;
+        }
+
+        .package-card {
+            display: block;
+            min-height: 154px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.035);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .package-option input:checked + .package-card {
+            border-color: var(--glam-gold);
+            background: rgba(212, 175, 55, 0.12);
+            box-shadow: 0 12px 28px rgba(212, 175, 55, 0.12);
+        }
+
+        @media (max-width: 480px) {
+            .package-options {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body class="p-6">
@@ -122,6 +156,28 @@
                 <div class="input-group">
                     <i class="fas fa-lock input-icon"></i>
                     <input type="password" id="password" placeholder="Password" class="input-field" required>
+                </div>
+
+                <div class="mb-3">
+                    <p class="text-gray-500 text-[10px] uppercase tracking-[0.25em] font-bold mb-3">Select Package</p>
+                    <div class="package-options">
+                        <label class="package-option">
+                            <input type="radio" name="package" value="classic" checked>
+                            <span class="package-card">
+                                <span class="block gold-text text-lg font-black uppercase mb-1">Glam Classic</span>
+                                <span class="block text-white text-2xl font-black mb-3">₦14,000</span>
+                                <span class="block text-zinc-500 text-[9px] font-bold uppercase leading-relaxed">₦10,000 reward • ₦5,000 login bonus • standard daily gains</span>
+                            </span>
+                        </label>
+                        <label class="package-option">
+                            <input type="radio" name="package" value="prime">
+                            <span class="package-card">
+                                <span class="block gold-text text-lg font-black uppercase mb-1">Glam Prime</span>
+                                <span class="block text-white text-2xl font-black mb-3">₦20,000</span>
+                                <span class="block text-zinc-500 text-[9px] font-bold uppercase leading-relaxed">₦20,000 reward • x3 daily gains • GlamAI access</span>
+                            </span>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="input-group">
@@ -174,6 +230,35 @@
         // Referral logic
         const params = new URLSearchParams(window.location.search);
         if(params.get("ref")) document.getElementById("referrer").value = params.get("ref");
+        if(params.get("package")) {
+            const packageInput = document.querySelector(`input[name="package"][value="${params.get("package")}"]`);
+            if(packageInput) packageInput.checked = true;
+        }
+
+        const PACKAGES = {
+            classic: {
+                id: "classic",
+                name: "Glam Classic",
+                fee: "₦14,000",
+                amount: 14000,
+                welcomeBonus: 10000,
+                dailyMultiplier: 1,
+                associateBonus: 0,
+                upgradeFee: 0,
+                aiAccess: false
+            },
+            prime: {
+                id: "prime",
+                name: "Glam Prime",
+                fee: "₦20,000",
+                amount: 20000,
+                welcomeBonus: 20000,
+                dailyMultiplier: 3,
+                associateBonus: 16000,
+                upgradeFee: 6000,
+                aiAccess: true
+            }
+        };
 
         // Form Submit
         const signupForm = document.getElementById('signupForm');
@@ -188,21 +273,8 @@
             const username = document.getElementById('username').value.trim().toLowerCase();
             const email = document.getElementById('email').value.trim().toLowerCase();
             const country = document.getElementById('country').value;
-
-            // Internal Fee logic and Welcome Bonus logic
-            let internalFee = "₦14,000";
-            let welcomeBonus = 10000; // Default for Nigeria (₦10,000)
-
-            if(country === "Ghana") {
-                internalFee = "220 GHC";
-                welcomeBonus = 180; // 180 Cedis bonus
-            } else if(country === "Cameroon") {
-                internalFee = "13,000 XAF";
-                welcomeBonus = 10000; // 10,000 XAF bonus
-            } else if(country === "USA") {
-                internalFee = "10.00 USD";
-                welcomeBonus = 8; // 8.00 USD bonus
-            }
+            const selectedPackageId = document.querySelector('input[name="package"]:checked').value;
+            const selectedPackage = PACKAGES[selectedPackageId] || PACKAGES.classic;
 
             try {
                 await signInAnonymously(auth);
@@ -219,8 +291,15 @@
                     password: document.getElementById('password').value,
                     country: country,
                     referrer: document.getElementById('referrer').value,
-                    regFee: internalFee,
-                    balance: welcomeBonus, 
+                    packageId: selectedPackage.id,
+                    packageName: selectedPackage.name,
+                    regFee: selectedPackage.fee,
+                    packageAmount: selectedPackage.amount,
+                    dailyMultiplier: selectedPackage.dailyMultiplier,
+                    associateBonus: selectedPackage.associateBonus,
+                    upgradeFee: selectedPackage.upgradeFee,
+                    aiAccess: selectedPackage.aiAccess,
+                    balance: selectedPackage.welcomeBonus, 
                     joinedAt: new Date().toISOString(),
                     status: 'active'
                 };
@@ -228,6 +307,10 @@
                 await setDoc(userRef, userData);
                 
                 localStorage.setItem('glamour_username', username);
+                localStorage.setItem('glamour_fullname', userData.fullName);
+                localStorage.setItem('glamour_email', email);
+                localStorage.setItem('glamour_country', country);
+                localStorage.setItem('glamour_package', selectedPackage.id);
                 status.style.color = "#d4af37";
                 status.innerText = "Account Created! Welcome to the Elite.";
                 

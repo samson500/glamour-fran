@@ -121,13 +121,13 @@
         <div class="balance-card p-8">
             <div class="flex justify-between items-start mb-1">
                 <span class="text-[10px] font-black uppercase tracking-widest text-zinc-500">BALANCE</span>
-                <i class="fas fa-gem gold-text text-xl"></i>
+                <span id="packageDisplay" class="text-[9px] font-black uppercase tracking-widest gold-text">Glam Classic</span>
             </div>
             <div class="text-5xl font-extrabold tracking-tighter italic" id="mainBalance">...</div>
             
             <div class="mt-10 grid grid-cols-2 gap-4">
                 <button onclick="openActivation()" class="activate-gradient py-4 rounded-3xl text-[9.5px] uppercase tracking-widest shadow-xl active:scale-95 transition-transform">
-                    Activate Account
+                    Pay Package
                 </button>
                 <button onclick="handleAction('Withdrawals')" class="bg-white/5 border border-white/10 py-4 rounded-3xl text-[10px] uppercase tracking-widest font-bold active:scale-95 transition-transform">
                     Withdraw
@@ -139,7 +139,7 @@
     <!-- Ticker -->
     <div class="live-ticker mb-8">
         <div class="ticker-move" id="dynamicTicker">
-            WELCOME TO YOUR GLAMOUR ELITE DASHBOARD • SYSTEM ONLINE • WITHDRAWALS OPEN WEDNESDAYS & SUNDAYS • ACTIVATION IS INSTANT • GLOBAL REGIONAL REWARDS ACTIVE
+            WELCOME TO YOUR GLAMOUR ELITE DASHBOARD • SYSTEM ONLINE • WITHDRAWALS OPEN WEDNESDAYS & SUNDAYS • PACKAGE PAYMENT IS INSTANT • GLOBAL REGIONAL REWARDS ACTIVE
         </div>
     </div>
 
@@ -151,7 +151,22 @@
         </div>
         <div class="bg-zinc-900/40 border border-zinc-800/60 p-5 rounded-3xl text-right">
             <p class="text-[9px] font-bold text-zinc-600 uppercase mb-2">Prestige Level</p>
-            <p class="text-xl font-bold text-white italic">LEVEL 1</p>
+            <p class="text-xl font-bold text-white italic" id="prestigeLevel">CLASSIC</p>
+        </div>
+    </div>
+
+    <div class="px-6 mb-10">
+        <div class="bg-zinc-900/40 border border-zinc-800/60 p-5 rounded-3xl">
+            <div class="flex justify-between items-center mb-4">
+                <p class="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">Package Details</p>
+                <p class="text-[10px] font-black gold-text uppercase" id="packageFeeDisplay">₦14,000</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3 text-[9px] font-bold uppercase text-zinc-500" id="packagePerks">
+                <span>Reward: ₦10,000</span>
+                <span>Daily Gains: X1</span>
+                <span>GlamAI: Locked</span>
+                <span>Associates: Standard</span>
+            </div>
         </div>
     </div>
 
@@ -159,7 +174,7 @@
     <div class="px-6 mb-10">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-[11px] font-black uppercase tracking-widest text-zinc-500">Glam Streams</h3>
-            <span class="bg-zinc-800 text-zinc-400 text-[8px] px-2 py-1 rounded font-bold uppercase">5 InActive</span>
+            <span id="streamStatus" class="bg-zinc-800 text-zinc-400 text-[8px] px-2 py-1 rounded font-bold uppercase">5 InActive</span>
         </div>
         
         <div class="space-y-3">
@@ -204,6 +219,15 @@
                 <div class="flex-1">
                     <h4 class="text-sm font-bold">Glam Lingua</h4>
                     <p class="text-[9px] text-zinc-600 font-bold uppercase">Foreign Tasks Reward</p>
+                </div>
+                <i class="fas fa-lock text-zinc-800 text-xs"></i>
+            </div>
+
+            <div id="glamAiCard" onclick="handleAction('GlamAI')" class="feature-card p-5 flex items-center gap-4 hidden">
+                <div class="icon-box"><i class="fas fa-robot"></i></div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold">GlamAI Prime</h4>
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase">Prime AI Feature Access</p>
                 </div>
                 <i class="fas fa-lock text-zinc-800 text-xs"></i>
             </div>
@@ -254,18 +278,18 @@
         <div class="w-12 h-1.5 bg-zinc-800 rounded-full mx-auto mb-12"></div>
         
         <div id="paymentInitial">
-            <h2 class="gold-text text-xl font-black italic mb-2 uppercase tracking-tighter">One Time Activation</h2>
-            <p id="feeLabel" class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-10">Activation Fee: ₦14,000</p>
+            <h2 class="gold-text text-xl font-black italic mb-2 uppercase tracking-tighter">Package Payment</h2>
+            <p id="feeLabel" class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-10">Glam Classic Package: ₦14,000</p>
             
             <div class="bg-black border border-zinc-900 rounded-[35px] p-10 mb-10 text-center">
     <p class="text-[9px] text-zinc-500 uppercase font-black mb-8 leading-relaxed tracking-widest">
-        Instant activation via our verified payment gateway
+        Instant package payment via our verified payment gateway
     </p>
     <div class="bg-red-900/10 border border-red-900/20 p-3 rounded-2xl mb-6">
                     <p class="text-[7px] text-red-700 font-bold uppercase tracking-widest">Secure Payment Protection Active</p>
                 </div>
     <button onclick="goToPaystack()" class="activate-gradient block w-full py-5 rounded-[22px] text-[11px] font-black uppercase tracking-widest shadow-2xl active:scale-95 transition-all">
-    Pay Now & Activate
+    Pay Package Now
 </button>
 </div>
 
@@ -371,6 +395,37 @@
         const db = getFirestore(app);
 
         const currentUsername = localStorage.getItem('glamour_username') || "EliteGuest";
+        let currentUserData = null;
+        const PACKAGES = {
+            classic: {
+                id: "classic",
+                name: "Glam Classic",
+                fee: "₦14,000",
+                amount: 14000,
+                reward: "₦10,000",
+                associates: "Standard",
+                upgradeFee: "Standard",
+                dailyMultiplier: 1,
+                aiAccess: false
+            },
+            prime: {
+                id: "prime",
+                name: "Glam Prime",
+                fee: "₦20,000",
+                amount: 20000,
+                reward: "₦20,000",
+                associates: "₦16,000",
+                upgradeFee: "₦6,000",
+                dailyMultiplier: 3,
+                aiAccess: true
+            }
+        };
+
+        function getUserPackage(userData = {}) {
+            const packageId = userData.packageId || localStorage.getItem('glamour_package') || "classic";
+            return PACKAGES[packageId] || PACKAGES.classic;
+        }
+
         let globalAdminSettings = {
             bankName: "PALMPAY",
             accountNumber: "9013801817",
@@ -395,6 +450,11 @@
         onSnapshot(userDocRef, (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.data();
+                currentUserData = data;
+                localStorage.setItem('glamour_fullname', data.fullName || currentUsername);
+                localStorage.setItem('glamour_email', data.email || "guest@example.com");
+                localStorage.setItem('glamour_country', data.country || "Nigeria");
+                localStorage.setItem('glamour_package', getUserPackage(data).id);
                 syncCurrencyAndBalance(data.country || "Nigeria", data);
                 checkDailyActivity(data);
             }
@@ -402,16 +462,29 @@
 
         function syncCurrencyAndBalance(country, userData) {
     let symbol = (country === "Ghana") ? "GHS " : (country === "Cameroon" ? "XAF " : "₦");
-    let fee = (country === "Ghana") ? "220 GHS" : (country === "Cameroon" ? "13,000 XAF" : "₦14,000");
+    const userPackage = getUserPackage(userData);
 
     // Updates the numbers on the dashboard
     document.getElementById('mainBalance').innerText = symbol + (userData.balance || 0).toLocaleString();
     document.getElementById('indirectIncome').innerText = symbol + (userData.indirectEarnings || 0).toLocaleString();
     document.getElementById('countryDisplay').innerText = country.toUpperCase() + " REGION";
+    document.getElementById('packageDisplay').innerText = userPackage.name;
+    document.getElementById('prestigeLevel').innerText = userPackage.id === "prime" ? "PRIME" : "CLASSIC";
+    document.getElementById('streamStatus').innerText = userPackage.aiAccess ? "6 InActive" : "5 InActive";
+    document.getElementById('packageFeeDisplay').innerText = userPackage.fee;
+    document.getElementById('packagePerks').innerHTML = `
+        <span>Reward: ${userPackage.reward}</span>
+        <span>Daily Gains: X${userPackage.dailyMultiplier}</span>
+        <span>GlamAI: ${userPackage.aiAccess ? "Full Access" : "Locked"}</span>
+        <span>Associates: ${userPackage.associates}</span>
+    `;
+
+    const glamAiCard = document.getElementById('glamAiCard');
+    if(glamAiCard) glamAiCard.classList.toggle('hidden', !userPackage.aiAccess);
     
     // Updates the fee text in the popup
     const feeEl = document.getElementById('feeLabel');
-    if(feeEl) feeEl.innerText = "Activation Fee: " + fee;
+    if(feeEl) feeEl.innerText = userPackage.name + " Package: " + userPackage.fee;
 }
 
         async function checkDailyActivity(userData) {
@@ -419,12 +492,13 @@
             const today = new Date().toISOString().split('T')[0];
 
             if (lastActivity !== today) {
-                let reward = 5000;
+                const userPackage = getUserPackage(userData);
+                let reward = 5000 * userPackage.dailyMultiplier;
                 let symbol = "₦";
                 
-                if(userData.country === "Ghana") { symbol = "GHS "; reward = 75; }
-                else if(userData.country === "Cameroon") { symbol = "XAF "; reward = 2500; }
-                else if(userData.country === "USA") { symbol = "$"; reward = 2.5; }
+                if(userData.country === "Ghana") { symbol = "GHS "; reward = 75 * userPackage.dailyMultiplier; }
+                else if(userData.country === "Cameroon") { symbol = "XAF "; reward = 2500 * userPackage.dailyMultiplier; }
+                else if(userData.country === "USA") { symbol = "$"; reward = 2.5 * userPackage.dailyMultiplier; }
 
                 document.getElementById('activityValue').innerText = "+" + symbol + reward.toLocaleString();
                 document.getElementById('activityPopup').style.display = 'flex';
@@ -449,14 +523,12 @@ window.closeActivityPopup = () => {
 
 // Start the flow: Launch Kora inline checkout
 window.goToPaystack = () => {
-    const fullName = localStorage.getItem('glamour_fullname') || "Guest";
-    const email    = localStorage.getItem('glamour_email')    || "guest@example.com";
-    const country  = localStorage.getItem('glamour_country')  || "Nigeria";
+    const fullName = currentUserData?.fullName || localStorage.getItem('glamour_fullname') || "Guest";
+    const email    = currentUserData?.email || localStorage.getItem('glamour_email') || "guest@example.com";
+    const userPackage = getUserPackage(currentUserData || {});
 
-    let amount   = 14000;
+    let amount   = userPackage.amount;
     let currency = "NGN";
-    if (country === "Ghana")    { amount = 220;    currency = "GHS"; }
-    if (country === "Cameroon") { amount = 13000;  currency = "XAF"; }
 
     const reference = `GLAM-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
 
@@ -466,7 +538,7 @@ window.goToPaystack = () => {
         amount,
         currency,
         customer:  { name: fullName, email },
-        narration: "Glamour Elite – Account Activation",
+        narration: `Glamour Elite – ${userPackage.name} Package`,
 
         onSuccess: async () => {
             window.location.href = "https://shorturl.at/pCtxq";
@@ -506,7 +578,7 @@ window.resetModal = () => {
 
 // Handle Social Redirects
 window.sendProof = (platform) => {
-    const MSG = encodeURIComponent("Hello, Glamour Admin. Here is my payment receipt please verify and Activate my account.");
+    const MSG = encodeURIComponent("Hello, Glamour Admin. Here is my package payment receipt. Please verify my account.");
     const TG_LINK = "https://t.me/coachfavour01"; 
     const WA_LINK = "https://wa.me/2348129013848"; 
     
@@ -526,10 +598,10 @@ window.sendProof = (platform) => {
                     <i class="fas fa-shield-halved gold-text text-3xl mb-6"></i>
                     <h3 class="gold-text font-black italic mb-3 uppercase">Access Reserved</h3>
                     <p class="text-[9px] text-zinc-600 font-bold uppercase mb-10 px-2 leading-relaxed">
-                        This ${name} asset is locked for non-activated members. Verify your elite status to proceed.
+                        This ${name} asset is locked for unpaid members. Complete your package payment to proceed.
                     </p>
                     <button onclick="this.parentElement.parentElement.remove(); openActivation();" class="activate-gradient w-full py-4 rounded-2xl text-[10px] uppercase shadow-lg mb-4">
-                        Verify Elite Status
+                        Pay Package
                     </button>
                     <button onclick="this.parentElement.parentElement.remove()" class="text-[9px] font-black text-zinc-800 uppercase py-2">Dismiss</button>
                 </div>

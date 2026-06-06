@@ -52,13 +52,31 @@
 
         .reward-box {
             width: 100%;
-            max-width: 460px;
+            max-width: 960px;
             background: var(--glam-card);
             backdrop-filter: blur(25px);
             border: 1px solid var(--glam-border);
             border-radius: 40px;
             padding: 40px 25px;
             box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9);
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .package-card {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+            border-radius: 30px;
+            padding: 24px 18px;
+        }
+
+        .package-card.prime {
+            background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.18), rgba(255, 255, 255, 0.025) 42%);
+            border-color: rgba(212, 175, 55, 0.5);
         }
 
         .plan-header {
@@ -178,6 +196,10 @@
         .activity-time { font-size: 10px; color: #555; display: block; }
 
         .footer { padding: 40px; margin-top: -100px; text-align: center; color: #444; font-size: 10px; font-weight: 800; letter-spacing: 2px; }
+
+        @media (max-width: 760px) {
+            .package-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -192,38 +214,69 @@
 
 <main>
     <div class="reward-box">
-        <div class="plan-header">ONE TIME ACTIVATION</div>
-        <div class="old-price">₦25,000</div>
-        <div class="new-price">₦14,000</div>
+        <div class="plan-header">CHOOSE YOUR GLAMOUR PACKAGE</div>
 
         <div class="timer-badge">
             <i class="fas fa-bolt mr-2"></i> LIMITED OFFER: <span id="countdown">10:00</span>
         </div>
 
-        <div class="section-title">Activation Bonuses</div>
-        <div class="earn-item">
-            <span><i class="fas fa-gem"></i> Glam Cashback Reward</span> 
-            <span class="val-pill">₦10,000</span>
-        </div>
-        <div class="earn-item">
-            <span><i class="fas fa-link"></i> Glam Login Bonus</span> 
-            <span class="val-pill">₦5,000</span>
-        </div>
+        <div class="package-grid">
+            <div class="package-card">
+                <div class="plan-header">GLAM CLASSIC PACKAGE</div>
+                <div class="new-price">₦14,000</div>
 
-        <div class="section-title">Daily Earning Streams</div>
-        <div class="earn-item"><span><i class="fas fa-video"></i> GlamLifestyle</span> <span class="val-pill">€2/hr</span></div>
-        <div class="earn-item"><span><i class="fas fa-pen-nib"></i> GlamScript2Cash</span> <span class="val-pill">€2/script</span></div>
-        <div class="earn-item"><span><i class="fas fa-bolt"></i> GlamRealtime</span> <span class="val-pill">€2/hr</span></div>
-        <div class="earn-item"><span><i class="fas fa-language"></i> GlamLingua</span> <span class="val-pill">€2/hr</span></div>
-        <div class="earn-item"><span><i class="fas fa-video"></i> GlamFaceTime</span> <span class="val-pill">€2/hr</span></div>
-        <div class="earn-item"><span><i class="fas fa-moon"></i> GlamDarkMode</span> <span class="val-pill">€2/hr</span></div>
-        <div class="earn-item"><span><i class="fas fa-plus-circle"></i> GlamStatus</span> <span class="val-pill">€3/view</span></div>
-        <div class="earn-item"><span><i class="fas fa-briefcase"></i> Glam9-5Works</span> <span class="val-pill">€2/hr</span></div>
+                <div class="section-title">Package Rewards</div>
+                <div class="earn-item"><span><i class="fas fa-crown"></i> Glam Fee</span> <span class="val-pill">₦14,000</span></div>
+                <div class="earn-item"><span><i class="fas fa-gem"></i> Glam Reward</span> <span class="val-pill">₦10,000</span></div>
+                <div class="earn-item"><span><i class="fas fa-users"></i> Glam Associates Bonus</span> <span class="val-pill">Standard</span></div>
+                <div class="earn-item"><span><i class="fas fa-arrow-up"></i> Upgrade Fee</span> <span class="val-pill">Standard</span></div>
+                <div class="earn-item"><span><i class="fas fa-bolt"></i> Daily Glam Gains</span> <span class="val-pill">X1</span></div>
+                <div class="earn-item"><span><i class="fas fa-robot"></i> AI Feature</span> <span class="val-pill">Locked</span></div>
 
-        <button class="plan-button" onclick="window.location.href='register.html'">Activate Glamour</button>
-        <p class="text-[9px] text-zinc-600 mt-6 text-center font-bold tracking-widest italic uppercase">
-            Total Potential: €12/Hour (₦24,000) + Global Partnerships
-        </p>
+                <div class="section-title">Daily Earning Streams</div>
+                <div class="earn-item"><span><i class="fas fa-video"></i> GlamLifestyle</span> <span class="val-pill">€2/hr</span></div>
+                <div class="earn-item"><span><i class="fas fa-pen-nib"></i> GlamScript2Cash</span> <span class="val-pill">€2/script</span></div>
+                <div class="earn-item"><span><i class="fas fa-bolt"></i> GlamRealtime</span> <span class="val-pill">€2/hr</span></div>
+                <div class="earn-item"><span><i class="fas fa-language"></i> GlamLingua</span> <span class="val-pill">€2/hr</span></div>
+                <div class="earn-item"><span><i class="fas fa-video"></i> GlamFaceTime</span> <span class="val-pill">€2/hr</span></div>
+                <div class="earn-item"><span><i class="fas fa-moon"></i> GlamDarkMode</span> <span class="val-pill">€2/hr</span></div>
+                <div class="earn-item"><span><i class="fas fa-plus-circle"></i> GlamStatus</span> <span class="val-pill">€3/view</span></div>
+                <div class="earn-item"><span><i class="fas fa-briefcase"></i> Glam9-5Works</span> <span class="val-pill">€2/hr</span></div>
+
+                <button class="plan-button" onclick="window.location.href='register.html?package=classic'">Choose Classic</button>
+                <p class="text-[9px] text-zinc-600 mt-6 text-center font-bold tracking-widest italic uppercase">
+                    Total Potential: €12/Hour (₦24,000) + Global Partnerships
+                </p>
+            </div>
+
+            <div class="package-card prime">
+                <div class="plan-header">GLAM PRIME PACKAGE</div>
+                <div class="new-price">₦20,000</div>
+
+                <div class="section-title">Prime Rewards</div>
+                <div class="earn-item"><span><i class="fas fa-crown"></i> Glam Fee</span> <span class="val-pill">€10 / ₦20,000</span></div>
+                <div class="earn-item"><span><i class="fas fa-gem"></i> Glam Reward</span> <span class="val-pill">€10 / ₦20,000</span></div>
+                <div class="earn-item"><span><i class="fas fa-users"></i> Glam Associates Bonus</span> <span class="val-pill">€8 / ₦16,000</span></div>
+                <div class="earn-item"><span><i class="fas fa-arrow-up"></i> Upgrade Fee</span> <span class="val-pill">€3 / ₦6,000</span></div>
+                <div class="earn-item"><span><i class="fas fa-bolt"></i> Daily Glam Gains</span> <span class="val-pill">X3</span></div>
+                <div class="earn-item"><span><i class="fas fa-robot"></i> AI Feature</span> <span class="val-pill">GlamAI Access</span></div>
+
+                <div class="section-title">Daily Earning Streams</div>
+                <div class="earn-item"><span><i class="fas fa-video"></i> GlamLifestyle</span> <span class="val-pill">€6/hr</span></div>
+                <div class="earn-item"><span><i class="fas fa-pen-nib"></i> GlamScript2Cash</span> <span class="val-pill">€6/script</span></div>
+                <div class="earn-item"><span><i class="fas fa-bolt"></i> GlamRealtime</span> <span class="val-pill">€6/hr</span></div>
+                <div class="earn-item"><span><i class="fas fa-language"></i> GlamLingua</span> <span class="val-pill">€6/hr</span></div>
+                <div class="earn-item"><span><i class="fas fa-video"></i> GlamFaceTime</span> <span class="val-pill">€6/hr</span></div>
+                <div class="earn-item"><span><i class="fas fa-moon"></i> GlamDarkMode</span> <span class="val-pill">€6/hr</span></div>
+                <div class="earn-item"><span><i class="fas fa-plus-circle"></i> GlamStatus</span> <span class="val-pill">€9/view</span></div>
+                <div class="earn-item"><span><i class="fas fa-briefcase"></i> Glam9-5Works</span> <span class="val-pill">€6/hr</span></div>
+
+                <button class="plan-button" onclick="window.location.href='register.html?package=prime'">Choose Prime</button>
+                <p class="text-[9px] text-zinc-600 mt-6 text-center font-bold tracking-widest italic uppercase">
+                    Full access to GlamAI on Prime Package
+                </p>
+            </div>
+        </div>
     </div>
 </main>
 
