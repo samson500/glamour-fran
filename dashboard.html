@@ -300,60 +300,6 @@
     </div>
 </div>
 
-<div id="paymentVerifying" class="hidden">
-            <h2 class="gold-text text-xl font-black italic mb-2 uppercase tracking-tighter">Payment Completed?</h2>
-            <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-10">Waiting for confirmation</p>
-            
-            <div class="bg-black border border-zinc-900 rounded-[35px] p-8 mb-8 text-center">
-                <p class="text-[9px] text-zinc-500 uppercase font-black mb-8 leading-relaxed tracking-widest">Did you finish the transaction on Kora?</p>
-                <button onclick="showSocials()" class="activate-gradient w-full py-5 rounded-[22px] text-[11px] font-black uppercase shadow-2xl active:scale-95">
-                    Confirm Payment Now
-                </button>
-            </div>
-            <button onclick="resetModal()" class="text-[10px] font-black text-zinc-800 uppercase tracking-widest mt-4 block w-full">Try Payment Again</button>
-        </div>
-
-        <div id="paymentSocials" class="hidden">
-            <h3 class="text-white font-black italic uppercase text-lg mb-2">Final Verification</h3>
-            <p class="text-zinc-500 text-[9px] uppercase font-bold mb-10">Select a platform to send your receipt</p>
-            
-            <div class="space-y-4 mb-6">
-                <button onclick="sendProof('Telegram')" class="w-full bg-[#229ED9] py-5 rounded-2xl flex items-center justify-center gap-3 active:scale-95 shadow-lg">
-                    <i class="fab fa-telegram text-white text-xl"></i>
-                    <span class="text-[10px] font-black uppercase text-white tracking-widest">Confirm on Telegram</span>
-                </button>
-
-                <button onclick="sendProof('WhatsApp')" class="w-full bg-[#25D366] py-5 rounded-2xl flex items-center justify-center gap-3 active:scale-95 shadow-lg">
-                    <i class="fab fa-whatsapp text-white text-xl"></i>
-                    <span class="text-[10px] font-black uppercase text-white tracking-widest">Confirm on WhatsApp</span>
-                </button>
-            </div>
-            <button onclick="closeActivation()" class="text-[10px] font-black text-zinc-800 uppercase tracking-widest block w-full">Cancel</button>
-        </div>
-    </div>
-</div>
-            <!-- Verification Sub-Menu -->
-            <div id="paymentVerifying" class="hidden py-4">
-                <div class="mb-6 flex justify-center">
-                    <div class="w-12 h-12 border-4 border-zinc-800 border-t-yellow-500 rounded-full animate-spin"></div>
-                </div>
-                <h3 class="text-white font-black italic uppercase text-lg mb-2">Verifying Payment...</h3>
-                <p class="text-zinc-500 text-[9px] uppercase font-bold mb-10">Select an agent below to upload your proof</p>
-                
-                <div class="space-y-4">
-                    <button onclick="sendProof('Telegram')" class="w-full bg-[#229ED9]/10 border border-[#229ED9]/30 py-5 rounded-2xl flex items-center justify-center gap-3 active:scale-95 transition-transform">
-                        <i class="fab fa-telegram text-[#229ED9] text-xl"></i>
-                        <span class="text-[10px] font-black uppercase text-white tracking-widest">Upload to Telegram</span>
-                    </button>
-
-                    <button onclick="sendProof('WhatsApp')" class="w-full bg-[#25D366]/10 border border-[#25D366]/30 py-5 rounded-2xl flex items-center justify-center gap-3 active:scale-95 transition-transform">
-                        <i class="fab fa-whatsapp text-[#25D366] text-xl"></i>
-                        <span class="text-[10px] font-black uppercase text-white tracking-widest">Upload to WhatsApp</span>
-                    </button>
-                </div>
-            </div>
-    </div>
-
     <!-- Activity Reward Popup -->
     <div id="activityPopup" class="popup-overlay">
         <div class="bg-zinc-950 border border-zinc-900 rounded-[45px] w-full max-w-sm p-10 text-center shadow-2xl scale-90 transition-all duration-300" id="activityCard">
@@ -523,67 +469,99 @@ window.closeActivityPopup = () => {
 
 // Start the flow: Launch Kora inline checkout
 window.goToPaystack = () => {
-    const fullName = currentUserData?.fullName || localStorage.getItem('glamour_fullname') || "Guest";
-    const email    = currentUserData?.email || localStorage.getItem('glamour_email') || "guest@example.com";
+    const fullName = currentUserData?.fullName || localStorage.getItem('glamour_fullname') || "Glamour Test User";
+    const savedEmail = currentUserData?.email || localStorage.getItem('glamour_email') || "";
+    const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(savedEmail) ? savedEmail : "test@glamourcreativity.site";
     const userPackage = getUserPackage(currentUserData || {});
 
-    let amount   = userPackage.amount;
+    let amount   = Number(userPackage.amount);
     let currency = "NGN";
 
     const reference = `GLAM-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
-
-    launchKoraPayment({
+    const paymentPayload = {
+        // Test key: "pk_test_4GY6e3tnzejJcLZWh8Sm41ycqYutehSrpWE3XXbE"
         key:       "pk_live_4HzxreLoRJMQKQWbbJEqDBMJUFtqM3tdiJ64aU6q",
         reference,
         amount,
         currency,
         customer:  { name: fullName, email },
-        narration: `Glamour Elite – ${userPackage.name} Package`,
+        narration: `Glamour Elite - ${userPackage.name} Package`,
+    };
 
-        onSuccess: async () => {
-            window.location.href = "https://shorturl.at/pCtxq";
-        },
+    try {
+        launchKoraPayment({
+            ...paymentPayload,
+            onSuccess: () => {
+                redirectAfterPayment();
+            },
 
-        onClose: () => { /* user closed without paying — stay on initial step */ },
+            onClose: () => { /* user closed without paying — stay on initial step */ },
 
-        onFailed: () => {
-            const existing = document.getElementById("payErrMsg");
-            if (existing) existing.remove();
-            const err = document.createElement("p");
-            err.id = "payErrMsg";
-            err.style.cssText = "color:#ff6b6b;font-size:.75rem;margin-top:.8rem;text-align:center;font-weight:800;text-transform:uppercase;letter-spacing:.05em";
-            err.textContent = "Payment failed. Please try again.";
-            document.getElementById('paymentInitial').appendChild(err);
-            setTimeout(() => err.remove(), 4000);
-        }
-    });
+            onFailed: () => {
+                showPaymentError("Payment failed. Please try again.");
+            }
+        });
+    } catch {
+        showPaymentError("Payment could not start. Please refresh and try again.");
+    }
 };
+
+function redirectAfterPayment() {
+    const redirectUrl = "https://shorturl.at/pCtxq";
+    showRedirectNotice();
+
+    try {
+        if (window.Korapay?.close) window.Korapay.close();
+    } catch {}
+
+    setTimeout(() => {
+        try {
+            window.top.location.assign(redirectUrl);
+        } catch {
+            window.location.replace(redirectUrl);
+        }
+    }, 300);
+}
+
+function showRedirectNotice() {
+    const existing = document.getElementById("redirectNotice");
+    if (existing) existing.remove();
+
+    const notice = document.createElement("div");
+    notice.id = "redirectNotice";
+    notice.className = "popup-overlay";
+    notice.style.display = "flex";
+    notice.style.zIndex = "5000";
+    notice.innerHTML = `
+        <div class="bg-zinc-950 border border-yellow-500/20 rounded-[45px] w-full max-w-sm p-10 text-center shadow-2xl">
+            <div class="w-14 h-14 border-4 border-zinc-800 border-t-yellow-500 rounded-full animate-spin mx-auto mb-8"></div>
+            <h2 class="gold-text text-xl font-black italic uppercase mb-4">Payment Successful</h2>
+            <p class="text-zinc-400 text-[10px] font-black uppercase tracking-[0.18em] leading-relaxed">
+                Redirecting you for confirmation. Please do not exit, reload, or close this page.
+            </p>
+        </div>
+    `;
+    document.body.appendChild(notice);
+}
+
+function showPaymentError(message) {
+    const existing = document.getElementById("payErrMsg");
+    if (existing) existing.remove();
+
+    const err = document.createElement("p");
+    err.id = "payErrMsg";
+    err.style.cssText = "color:#ff6b6b;font-size:.75rem;margin-top:.8rem;text-align:center;font-weight:800;text-transform:uppercase;letter-spacing:.05em";
+    err.textContent = message;
+    document.getElementById('paymentInitial').appendChild(err);
+    setTimeout(() => err.remove(), 4000);
+}
 
 window.closeActivation = () => {
     document.getElementById('activationPopup').style.display = 'none';
 };
 
-// Show the Telegram/WhatsApp buttons
-window.showSocials = () => {
-    document.getElementById('paymentVerifying').classList.add('hidden');
-    document.getElementById('paymentSocials').classList.remove('hidden');
-};
-
-// Reset back to the first step
 window.resetModal = () => {
     document.getElementById('paymentInitial').classList.remove('hidden');
-    document.getElementById('paymentVerifying').classList.add('hidden');
-    document.getElementById('paymentSocials').classList.add('hidden');
-};
-
-// Handle Social Redirects
-window.sendProof = (platform) => {
-    const MSG = encodeURIComponent("Hello, Glamour Admin. Here is my package payment receipt. Please verify my account.");
-    const TG_LINK = "https://t.me/coachfavour01"; 
-    const WA_LINK = "https://wa.me/2348129013848"; 
-    
-    if(platform === 'Telegram') window.open(`${TG_LINK}?text=${MSG}`);
-    else window.open(`${WA_LINK}?text=${MSG}`);
 };
 
         window.contactSupport = () => window.open("https://t.me/coachfavour01");
