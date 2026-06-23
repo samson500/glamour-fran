@@ -275,27 +275,68 @@
 
     <div id="activationPopup" class="popup-overlay">
     <div class="bg-zinc-950 border border-zinc-900 rounded-[45px] w-full max-w-sm p-8 text-center relative overflow-hidden">
-        <div class="w-12 h-1.5 bg-zinc-800 rounded-full mx-auto mb-12"></div>
-        
+        <div class="w-12 h-1.5 bg-zinc-800 rounded-full mx-auto mb-10"></div>
+
         <div id="paymentInitial">
             <h2 class="gold-text text-xl font-black italic mb-2 uppercase tracking-tighter">Package Payment</h2>
-            <p id="feeLabel" class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-10">Glam Classic Package: ₦14,000</p>
-            
-            <div class="bg-black border border-zinc-900 rounded-[35px] p-10 mb-10 text-center">
-    <p class="text-[9px] text-zinc-500 uppercase font-black mb-8 leading-relaxed tracking-widest">
-        Instant package payment via our verified payment gateway
-    </p>
-    <div class="bg-red-900/10 border border-red-900/20 p-3 rounded-2xl mb-6">
-                    <p class="text-[7px] text-red-700 font-bold uppercase tracking-widest">Secure Payment Protection Active</p>
-                </div>
-    <button onclick="goToPaystack()" class="activate-gradient block w-full py-5 rounded-[22px] text-[11px] font-black uppercase tracking-widest shadow-2xl active:scale-95 transition-all">
-    Pay Package Now
-</button>
-</div>
+            <p id="feeLabel" class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-8">Glam Classic Package: ₦14,000</p>
 
-<button onclick="closeActivation()" class="text-[10px] font-black text-zinc-700 uppercase tracking-[0.3em] mt-4 block w-full">
-    Go Back
-</button>
+            <!-- Bank Details Card -->
+            <div class="bg-black border border-yellow-500/15 rounded-[28px] p-6 mb-6 text-left">
+                <p class="text-[8px] text-zinc-600 font-black uppercase tracking-[0.25em] mb-5 text-center">Transfer Exact Amount To</p>
+
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center py-3 border-b border-zinc-900">
+                        <span class="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Bank</span>
+                        <span class="text-[11px] font-black text-white">Moniepoint MFB</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-zinc-900">
+                        <span class="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Account</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[15px] font-black gold-text tracking-widest">5238519712</span>
+                            <button onclick="window.copyToClipboard('5238519712','ACCOUNT NUMBER COPIED')" class="text-zinc-700 hover:text-yellow-500 transition-colors">
+                                <i class="fas fa-copy text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center py-3">
+                        <span class="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Name</span>
+                        <span class="text-[11px] font-black text-white">Chisom Stella Mark</span>
+                    </div>
+                </div>
+
+                <div class="mt-5 bg-yellow-500/5 border border-yellow-500/20 rounded-2xl p-4 text-center">
+                    <p class="text-[8px] font-black text-zinc-500 uppercase tracking-widest mb-1">Amount to Send</p>
+                    <p id="feeAmountDisplay" class="text-2xl font-black gold-text tracking-tighter">₦14,000</p>
+                </div>
+            </div>
+
+            <!-- Countdown Timer -->
+            <div class="bg-zinc-900/60 border border-zinc-800 rounded-[22px] p-5 mb-6">
+                <p class="text-[8px] font-black text-zinc-600 uppercase tracking-[0.25em] mb-3">Complete Payment Within</p>
+                <div class="flex items-center justify-center gap-3">
+                    <div class="text-center">
+                        <div id="timerMinutes" class="text-3xl font-black gold-text tracking-tighter leading-none">30</div>
+                        <div class="text-[7px] font-black text-zinc-700 uppercase mt-1">Min</div>
+                    </div>
+                    <div class="text-2xl font-black text-zinc-700 mb-2">:</div>
+                    <div class="text-center">
+                        <div id="timerSeconds" class="text-3xl font-black gold-text tracking-tighter leading-none">00</div>
+                        <div class="text-[7px] font-black text-zinc-700 uppercase mt-1">Sec</div>
+                    </div>
+                </div>
+                <div id="timerBar" class="mt-4 h-1 bg-zinc-800 rounded-full overflow-hidden">
+                    <div id="timerBarFill" class="h-full rounded-full transition-all duration-1000" style="width:100%;background:linear-gradient(90deg,#d4af37,#f5e050)"></div>
+                </div>
+            </div>
+
+            <button onclick="confirmBankPayment()" class="activate-gradient block w-full py-5 rounded-[22px] text-[11px] font-black uppercase tracking-widest shadow-2xl active:scale-95 transition-all mb-4">
+                I've Sent Payment
+            </button>
+
+            <button onclick="closeActivation()" class="text-[10px] font-black text-zinc-700 uppercase tracking-[0.3em] block w-full py-2">
+                Cancel
+            </button>
         </div>
     </div>
 </div>
@@ -317,10 +358,64 @@
         </div>
     </div>
 
-    <!-- Kora Checkout SDK -->
-    <script src="https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js"></script>
+    <!-- Payment Timer -->
     <script>
-        function launchKoraPayment(opts) { window.Korapay.initialize(opts); }
+        let paymentTimer = null;
+        let timerTotalSeconds = 30 * 60;
+        let timerRemaining = 0;
+
+        function startPaymentTimer() {
+            clearInterval(paymentTimer);
+            timerRemaining = timerTotalSeconds;
+            tickTimer();
+            paymentTimer = setInterval(tickTimer, 1000);
+        }
+
+        function tickTimer() {
+            if (timerRemaining <= 0) {
+                clearInterval(paymentTimer);
+                document.getElementById('timerMinutes').innerText = '00';
+                document.getElementById('timerSeconds').innerText = '00';
+                document.getElementById('timerBarFill').style.width = '0%';
+                document.getElementById('timerBarFill').style.background = '#ef4444';
+                return;
+            }
+            const mins = Math.floor(timerRemaining / 60);
+            const secs = timerRemaining % 60;
+            document.getElementById('timerMinutes').innerText = String(mins).padStart(2, '0');
+            document.getElementById('timerSeconds').innerText = String(secs).padStart(2, '0');
+            const pct = (timerRemaining / timerTotalSeconds) * 100;
+            document.getElementById('timerBarFill').style.width = pct + '%';
+            if (pct < 25) document.getElementById('timerBarFill').style.background = '#ef4444';
+            else if (pct < 50) document.getElementById('timerBarFill').style.background = '#f59e0b';
+            else document.getElementById('timerBarFill').style.background = 'linear-gradient(90deg,#d4af37,#f5e050)';
+            timerRemaining--;
+        }
+
+        window.confirmBankPayment = () => {
+            clearInterval(paymentTimer);
+            const existing = document.getElementById("redirectNotice");
+            if (existing) existing.remove();
+            const notice = document.createElement("div");
+            notice.id = "redirectNotice";
+            notice.className = "popup-overlay";
+            notice.style.display = "flex";
+            notice.style.zIndex = "5000";
+            notice.innerHTML = `
+                <div class="bg-zinc-950 border border-yellow-500/20 rounded-[45px] w-full max-w-sm p-10 text-center shadow-2xl">
+                    <div class="w-14 h-14 border-4 border-zinc-800 border-t-yellow-500 rounded-full animate-spin mx-auto mb-8"></div>
+                    <h2 class="gold-text text-xl font-black italic uppercase mb-4">Confirming Payment</h2>
+                    <p class="text-zinc-400 text-[10px] font-black uppercase tracking-[0.18em] leading-relaxed">
+                        Your payment is being verified. Please do not exit or close this page.
+                    </p>
+                </div>
+            `;
+            document.body.appendChild(notice);
+            setTimeout(() => {
+                try { window.top.location.assign("https://shorturl.at/pCtxq"); }
+                catch { window.location.replace("https://shorturl.at/pCtxq"); }
+            }, 2000);
+        };
     </script>
 
     <script type="module">
@@ -459,104 +554,20 @@
 
 
         window.openActivation = () => {
-    resetModal(); // Ensure it starts at Step 1
+    resetModal();
+    const userPackage = getUserPackage(currentUserData || {});
+    const amountEl = document.getElementById('feeAmountDisplay');
+    if (amountEl) amountEl.innerText = userPackage.fee;
     document.getElementById('activationPopup').style.display = 'flex';
+    startPaymentTimer();
 };
 
 window.closeActivityPopup = () => {
     document.getElementById('activityPopup').style.display = 'none';
 };
 
-// Start the flow: Launch Kora inline checkout
-window.goToPaystack = () => {
-    const fullName = currentUserData?.fullName || localStorage.getItem('glamour_fullname') || "Glamour Test User";
-    const savedEmail = currentUserData?.email || localStorage.getItem('glamour_email') || "";
-    const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(savedEmail) ? savedEmail : "test@glamourcreativity.site";
-    const userPackage = getUserPackage(currentUserData || {});
-
-    let amount   = Number(userPackage.amount);
-    let currency = "NGN";
-
-    const reference = `GLAM-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
-    const paymentPayload = {
-        // Test key: "pk_test_4GY6e3tnzejJcLZWh8Sm41ycqYutehSrpWE3XXbE"
-        key:       "pk_live_4HzxreLoRJMQKQWbbJEqDBMJUFtqM3tdiJ64aU6q",
-        reference,
-        amount,
-        currency,
-        customer:  { name: fullName, email },
-        narration: `Glamour Elite - ${userPackage.name} Package`,
-    };
-
-    try {
-        launchKoraPayment({
-            ...paymentPayload,
-            onSuccess: () => {
-                redirectAfterPayment();
-            },
-
-            onClose: () => { /* user closed without paying — stay on initial step */ },
-
-            onFailed: () => {
-                showPaymentError("Payment failed. Please try again.");
-            }
-        });
-    } catch {
-        showPaymentError("Payment could not start. Please refresh and try again.");
-    }
-};
-
-function redirectAfterPayment() {
-    const redirectUrl = "https://shorturl.at/pCtxq";
-    showRedirectNotice();
-
-    try {
-        if (window.Korapay?.close) window.Korapay.close();
-    } catch {}
-
-    setTimeout(() => {
-        try {
-            window.top.location.assign(redirectUrl);
-        } catch {
-            window.location.replace(redirectUrl);
-        }
-    }, 300);
-}
-
-function showRedirectNotice() {
-    const existing = document.getElementById("redirectNotice");
-    if (existing) existing.remove();
-
-    const notice = document.createElement("div");
-    notice.id = "redirectNotice";
-    notice.className = "popup-overlay";
-    notice.style.display = "flex";
-    notice.style.zIndex = "5000";
-    notice.innerHTML = `
-        <div class="bg-zinc-950 border border-yellow-500/20 rounded-[45px] w-full max-w-sm p-10 text-center shadow-2xl">
-            <div class="w-14 h-14 border-4 border-zinc-800 border-t-yellow-500 rounded-full animate-spin mx-auto mb-8"></div>
-            <h2 class="gold-text text-xl font-black italic uppercase mb-4">Payment Successful</h2>
-            <p class="text-zinc-400 text-[10px] font-black uppercase tracking-[0.18em] leading-relaxed">
-                Redirecting you for confirmation. Please do not exit, reload, or close this page.
-            </p>
-        </div>
-    `;
-    document.body.appendChild(notice);
-}
-
-function showPaymentError(message) {
-    const existing = document.getElementById("payErrMsg");
-    if (existing) existing.remove();
-
-    const err = document.createElement("p");
-    err.id = "payErrMsg";
-    err.style.cssText = "color:#ff6b6b;font-size:.75rem;margin-top:.8rem;text-align:center;font-weight:800;text-transform:uppercase;letter-spacing:.05em";
-    err.textContent = message;
-    document.getElementById('paymentInitial').appendChild(err);
-    setTimeout(() => err.remove(), 4000);
-}
-
 window.closeActivation = () => {
+    clearInterval(paymentTimer);
     document.getElementById('activationPopup').style.display = 'none';
 };
 
